@@ -1,0 +1,49 @@
+{
+  "base_url": "${ENV(BASE_URL)}",
+  "name": "create ad welcome",
+  "variables":{
+      "userId": 1,
+      "resType": "PIC"
+  },
+  "parameters":{
+      "userId": 1,
+      "resType": "PIC"
+  },
+  "request": {
+    "url": "/ad/welcomes",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "json": {
+      "userId": "$userId",
+      "title": "测试的欢迎页10",
+      "resType": "$resType",
+      "resUrl": "https://www.sina.com",
+      "platform": "web",
+      "stopSeconds": 60,
+      "link": {
+        "linkId": "",
+        "linkModule": "textbook",
+        "linkPageType": "list"
+      },
+      "linkUrl": "https://www.baidu.com",
+      "isActive": false,
+      "welcomeNo": 99
+    }
+  },
+  "validate": [
+    {
+			"eq": [
+				"status_code",
+				200
+			]
+		},
+		{
+			"eq": [
+				"content.ecode",
+				0
+			]
+		}
+  ]
+}

@@ -1,0 +1,15 @@
+
+config:
+    name: "demo ad"
+    variables:
+        device_sn: "XYZ"
+    base_url: ${ENV(BASE_URL)}
+
+testcases:
+-
+    name: ad welcome testcases
+    testcase: testcases/manager/ad/ad_testcase.yml
+    parameters:
+        userId: [101, 102, 103]
+        resType: ["PIC", "VID","TEST"]
+

@@ -1,0 +1,29 @@
+{
+	"base_url": "${ENV(BASE_URL)}",
+	"name": "ad welcome list",
+	"variables": {
+		"var1": "value1",
+		"var2": "value2"
+	},
+	"request": {
+		"url": "/ad/welcomes",
+		"method": "GET",
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	},
+	"validate": [
+		{
+			"eq": [
+				"status_code",
+				200
+			]
+		},
+		{
+			"eq": [
+				"content.ecode",
+				0
+			]
+		}
+	]
+}

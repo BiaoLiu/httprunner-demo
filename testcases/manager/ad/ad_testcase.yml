@@ -1,0 +1,41 @@
+config:
+    name: "ad testcase"
+    variables:
+        device_sn: "ABC"
+        username: ${ENV(USERNAME)}
+        password: ${ENV(PASSWORD)}
+    base_url: ${ENV(BASE_URL)}
+
+teststeps:
+-
+    name: ad list
+    api: api/manager/ad/ad_list.json
+    variables:
+        user_agent: 'iOS/10.3'
+        device_sn: $device_sn
+    validate:
+        - eq: ["status_code", 200]
+        - eq: ["content.ecode",0]
+-
+    name: create ad welcome
+    api: api/manager/ad/create_ad.json
+    parameters:
+        userId: [101, 102, 103]
+        resType: ["PIC", "VID","TEST"]
+    extract:
+        - welcomeId: content.data.welcomeId
+    validate:
+        - eq: ["status_code", 200]
+        - eq: ["content.ecode",0]
+-
+    name: ad welcome detail
+    api: api/manager/ad/ad_detail.json
+    validate:
+        - eq: ["status_code", 200]
+        - eq: ["content.ecode",0]
+-
+    name: update ad welcome
+    api: api/manager/ad/update_ad.json
+    validate:
+        - eq: ["status_code", 200]
+        - eq: ["content.ecode",0]
