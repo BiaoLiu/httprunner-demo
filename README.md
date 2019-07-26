@@ -40,6 +40,7 @@ validate为接口返回结果的校验器
 如果多个接口间有依赖，如 详情接口与更新接口 依赖于新增接口（详情接口与更新接口都需要使用到 新增接口创建完数据生成的主键id），
 使用extract参数，就可从新增接口的 HTTP 请求的响应结果中提取参数，并保存到参数变量中（例如welcomeId），后续测试用例可通过$welcomeId的形式进行引用
 
+
 例如，创建testcases/manager/ad_testcase.yml，参数定义完成后，可使用：
 
 > hrun testcases/manager/ad/ad_testcase.yml
@@ -120,4 +121,4 @@ testcases:
 
 #### 参考文档
 
-[HttpRunner官方文档](
+[HttpRunner官方文档](https://cn.httprunner.org)
