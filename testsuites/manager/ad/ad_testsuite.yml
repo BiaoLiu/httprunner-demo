@@ -1,7 +1,5 @@
 config:
     name: "ad testsuite"
-    variables:
-        device_sn: "XYZ"
     base_url: ${ENV(BASE_URL)}
 
 testcases:

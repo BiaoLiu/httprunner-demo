@@ -1,9 +1,9 @@
 {
   "base_url": "${ENV(BASE_URL)}",
   "name": "create ad welcome",
-  "variables":{
-      "userId": 1,
-      "resType": "PIC"
+  "variables": {
+    "userId": 1,
+    "resType": "PIC"
   },
   "request": {
     "url": "/ad/welcomes",
@@ -30,16 +30,16 @@
   },
   "validate": [
     {
-			"eq": [
-				"status_code",
-				200
-			]
-		},
-		{
-			"eq": [
-				"content.ecode",
-				0
-			]
-		}
+      "eq": [
+        "status_code",
+        200
+      ]
+    },
+    {
+      "eq": [
+        "content.ecode",
+        0
+      ]
+    }
   ]
 }

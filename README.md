@@ -22,10 +22,68 @@
 
 ### HttpRunner说明
 
-#### 创建api目录下的测试用例
+#### 创建API请求描述
 
-api目录存放api接口，request参数具体对应python的requests库的参数
-validate为接口返回结果的校验器
+API请求描述文档存放在api目录下，示例如下：
+
+`api/manager/ad/create_ad.json`
+
+```
+{
+  "base_url": "${ENV(BASE_URL)}",
+  "name": "create ad welcome",
+  "variables": {
+    "userId": 1,
+    "resType": "PIC"
+  },
+  "request": {
+    "url": "/ad/welcomes",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "json": {
+      "userId": "$userId",
+      "title": "测试的欢迎页10",
+      "resType": "$resType",
+      "resUrl": "https://www.sina.com",
+      "platform": "web",
+      "stopSeconds": 60,
+      "link": {
+        "linkId": "",
+        "linkModule": "textbook",
+        "linkPageType": "list"
+      },
+      "linkUrl": "https://www.baidu.com",
+      "isActive": false,
+      "welcomeNo": 99
+    }
+  },
+  "validate": [
+    {
+      "eq": [
+        "status_code",
+        200
+      ]
+    },
+    {
+      "eq": [
+        "content.ecode",
+        0
+      ]
+    }
+  ]
+}
+```
+
+参数说明：   
+
+- request   
+  request的参数指定接口请求url、method以及请求的数据等，具体对应Python的Requests库的参数   
+- variables   
+  如果在接口描述中存在变量引用的情况，在variables中对参数进行定义
+- validate   
+  validate为接口返回结果的校验器
 
 例如，创建api/manager/ad_list.json，参数定义完成后，可使用：
 
@@ -35,21 +93,90 @@ validate为接口返回结果的校验器
 
 
 
-#### 创建testcases目录下的测试用例
+#### 创建测试用例(testcase)
 
-如果多个接口间有依赖，如 详情接口与更新接口 依赖于新增接口（详情接口与更新接口都需要使用到 新增接口创建完数据生成的主键id），
-使用extract参数，就可从新增接口的 HTTP 请求的响应结果中提取参数，并保存到参数变量中（例如welcomeId），后续测试用例可通过$welcomeId的形式进行引用
+测试用例存放在testcases目录下
 
+概念：
+
+- 测试用例（testcase）应该是完整且独立的，每条测试用例应该是都可以独立运行的
+- 测试用例是测试步骤（teststep）的 有序 集合，每一个测试步骤对应一个 API 的请求描述
+
+在一个测试用例中，如果多个接口间有依赖，如 详情接口与更新接口 依赖于新增接口（详情接口与更新接口都需要使用到 新增接口创建完数据生成的主键id），使用teststeps定义接口请求顺序，同时使用extract参数，就可从新增接口的 HTTP 请求的响应结果中提取参数，并保存到参数变量中（例如welcomeId），后续测试步骤可通过$welcomeId的形式进行引用
+
+示例如下：
+
+`testcases/manager/ad/ad_testcase.yml`
+
+```
+config:
+    name: "ad testcase"
+    variables:
+        username: ${ENV(USERNAME)}
+        password: ${ENV(PASSWORD)}
+    base_url: ${ENV(BASE_URL)}
+
+teststeps:
+-
+    name: ad list
+    api: api/manager/ad/ad_list.json
+    variables:
+        pageNo: 1
+        pageSize: 10
+    validate:
+
+- eq: ["status_code", 200]
+- eq: ["content.ecode",0]
+  -
+      name: create ad welcome
+      api: api/manager/ad/create_ad.json #引用API请求
+      extract:  # 保存新增数据的wecomeId
+- welcomeId: content.data.welcomeId
+  date:
+- eq: ["status_code", 200]
+- eq: ["content.ecode",0]
+  -
+      name: ad welcome detail
+      api: api/manager/ad/ad_detail.json  #请具体查看，其中url引用了welcomeId
+      validate:
+- eq: ["status_code", 200]
+- eq: ["content.ecode",0]
+  -
+      name: update ad welcome
+      api: api/manager/ad/update_ad.json
+      validate:
+- eq: ["status_code", 200]
+- eq: ["content.ecode",0]
+  -
+      name: delete ad welcome
+      api: api/manager/ad/delete_ad.json
+      validate:
+- eq: ["status_code", 200]
+- eq: ["content.ecode",0]
+```
 
 例如，创建testcases/manager/ad_testcase.yml，参数定义完成后，可使用：
 
 > hrun testcases/manager/ad/ad_testcase.yml
 
-进行有序接口请求测试
+运行测试用例
 
 
 
-#### 创建testsuites目录下的测试用例集
+#### 创建测试用例集(testsuite)
+
+测试用例集存放在testcases目录下
+
+概念：
+
+- 测试用例集（testsuite）是测试用例（testcase）的 无序 集合，集合中的测试用例应该都是相互独立，不存在先后依赖关系的；如果确实存在先后依赖关系，那就需要在测试用例中完成依赖的处理
+
+使用testsuite不是必须的，使用testsuite主要有2个好处：
+
+1. 当测试用例数量比较多以后，为了方便管理和实现批量运行，通常需要使用测试用例集来对测试用例进行组织。
+2. 参数化请求
+
+##### 参数化请求
 
 在自动化测试中，经常会遇到如下场景：
 
@@ -66,6 +193,7 @@ validate为接口返回结果的校验器
 
 例如，对于独立参数 user_id，参数列表为 [1001, 1002, 1003, 1004]，那么就可以按照如下方式进行配置：
 
+
 ```
 config:
     name: testcase description
@@ -75,7 +203,9 @@ testcases:
         testcase: demo-quickstart-6.yml
         parameters:
             user_id: [1001, 1002, 1003, 1004]
+            
 ```
+
 
 进行该配置后，测试用例在运行时就会对 user_id 实现数据驱动，即分别使用 [1001, 1002, 1003, 1004] 四个值运行测试用例。
 
@@ -83,7 +213,8 @@ testcases:
 
 对于具有关联性的多个参数，例如 username 和 password，那么就可以按照如下方式进行配置：
 
-```
+
+​```
 config:
     name: "demo"
 
@@ -95,7 +226,8 @@ testcases:
                 - ["user1", "111111"]
                 - ["user2", "222222"]
                 - ["user3", "333333"]
-```
+​```
+
 
 进行该配置后，测试用例在运行时就会对 username 和 password 实现数据驱动，即分别使用 `{"username": "user1", "password": "111111"}`、`{"username": "user2", "password": "222222"}`、`{"username": "user3", "password": "333333"}` 运行 3 次测试，并且保证参数值总是成对使用。
 
@@ -105,11 +237,35 @@ testcases:
 
 
 
+示例如下：
+
+`/testsuites/manager/ad/ad_testsuite.yml`
+
+```
+config:
+    name: "ad testsuite"
+    base_url: ${ENV(BASE_URL)}
+
+testcases:
+-
+    name: ad welcome testcases
+    testcase: testcases/manager/ad/ad_testcase.yml
+    parameters:
+        pageNo-pageSize:
+            - [1,10]
+            - [2,1]
+            - [3,1]
+        userId: [101, 102, 103]
+        resType: ["PIC", "VID","TEST"]
+```
+
+
+
 例如，创建testsuites/manager/ad/ad_testsuite.yml，参数定义完成后，可使用：
 
 > hrun testsuites/manager/ad/ad_testsuite.yml
 
-进行接口的多种参数请求测试
+对测试用例进行批量运行，以及进行接口的多种参数请求测试
 
 
 
@@ -121,4 +277,4 @@ testcases:
 
 #### 参考文档
 
-[HttpRunner官方文档](https://cn.httprunner.org)
+[HttpRunner官方文档](
