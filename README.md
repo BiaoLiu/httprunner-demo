@@ -214,7 +214,7 @@ testcases:
 对于具有关联性的多个参数，例如 username 和 password，那么就可以按照如下方式进行配置：
 
 
-​```
+```
 config:
     name: "demo"
 
@@ -226,8 +226,7 @@ testcases:
                 - ["user1", "111111"]
                 - ["user2", "222222"]
                 - ["user3", "333333"]
-​```
-
+```
 
 进行该配置后，测试用例在运行时就会对 username 和 password 实现数据驱动，即分别使用 `{"username": "user1", "password": "111111"}`、`{"username": "user2", "password": "222222"}`、`{"username": "user3", "password": "333333"}` 运行 3 次测试，并且保证参数值总是成对使用。
 
@@ -239,7 +238,7 @@ testcases:
 
 示例如下：
 
-`/testsuites/manager/ad/ad_testsuite.yml`
+`testsuites/manager/ad/ad_testsuite.yml`
 
 ```
 config:
