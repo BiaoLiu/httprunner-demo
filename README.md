@@ -101,7 +101,7 @@ testcases:
 
 其他的参数形式，具体参考官方文档：
 
-[httprunner 参数化数据驱动](https://cn.httprunner.org/prepare/parameters/)
+[HttpRunner 参数化数据驱动](https://cn.httprunner.org/prepare/parameters/)
 
 
 
