@@ -272,6 +272,11 @@ testcases:
 
 使用 HttpRunner 执行完自动化测试后，会在当前路径的 reports 目录下生成一份 HTML 格式的测试报告。
 
+![](http://file.wpcenter.cn/b67d58e6-414d-4e0f-9234-cfb6aa677e1c.png)
+
+如果用例测试失败，点击Detail中log，查看日志信息
+![](http://file.wpcenter.cn/Snipaste_2019-07-26_15-22-31.png)
+
 
 
 ### 参考文档
