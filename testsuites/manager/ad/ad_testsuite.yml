@@ -1,6 +1,5 @@
-
 config:
-    name: "demo ad"
+    name: "ad testsuite"
     variables:
         device_sn: "XYZ"
     base_url: ${ENV(BASE_URL)}
@@ -10,6 +9,10 @@ testcases:
     name: ad welcome testcases
     testcase: testcases/manager/ad/ad_testcase.yml
     parameters:
+        pageNo-pageSize:
+            - [1,10]
+            - [2,1]
+            - [3,1]
         userId: [101, 102, 103]
         resType: ["PIC", "VID","TEST"]
 

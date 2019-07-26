@@ -2,8 +2,8 @@
   "base_url": "${ENV(BASE_URL)}",
   "name": "update ad welcome",
   "variables": {
-    "var1": "value1",
-    "var2": "value2"
+    "userId": 1,
+    "resType": "PIC"
   },
   "request": {
     "url": "/ad/welcomes/$welcomeId",
@@ -14,7 +14,7 @@
     "json": {
       "userId": 1,
       "title": "测试的欢迎页15",
-      "resType": "PIC",
+      "resType": "$resType",
       "resUrl": "https://www.sina.com",
       "platform": "web",
       "stopSeconds": 60,

@@ -5,10 +5,6 @@
       "userId": 1,
       "resType": "PIC"
   },
-  "parameters":{
-      "userId": 1,
-      "resType": "PIC"
-  },
   "request": {
     "url": "/ad/welcomes",
     "method": "POST",

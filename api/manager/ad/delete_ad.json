@@ -1,19 +1,11 @@
 {
   "base_url": "${ENV(BASE_URL)}",
-  "name": "ad welcome list",
-  "variables": {
-    "pageNo": 1,
-    "pageSize": 20
-  },
+  "name": "delete ad welcome",
   "request": {
-    "url": "/ad/welcomes",
-    "method": "GET",
+    "url": "/ad/welcomes/$welcomeId",
+    "method": "DELETE",
     "headers": {
       "Content-Type": "application/json"
-    },
-    "params": {
-      "pageNo": "$pageNo",
-      "pageSize": "$pageSize"
     }
   },
   "validate": [
